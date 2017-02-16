@@ -17,4 +17,8 @@ describe('schema-shot', () => {
     la(is.object(schema))
     snapshot(schema)
   })
+
+  it('works', () => {
+    schemaShot({my: 'here', when: 'now'})
+  })
 })

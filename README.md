@@ -131,6 +131,13 @@ schemaShot(person, {email: 'email'})
 [inferring]: https://github.com/bahmutov/validate-by-example#inferring-formats
 [overridden]: https://github.com/bahmutov/validate-by-example#overriding-formats
 
+## Dry run and showing the updates
+
+If you just want to see what a new schema would be, without saving it,
+run the tests with `DRY=1 npm test` option.
+
+If you want to see the schema and save it, run the tests with `SHOW=1 npm test`
+
 ## Difference with snapshot testing
 
 The schema shots do not store the direct information. A good example is
