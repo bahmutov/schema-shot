@@ -82,7 +82,7 @@ function storeValue ({file, specName, index, value}) {
 
 const isPromise = x => is.object(x) && is.fn(x.then)
 
-function snapshot (what, update) {
+function snapshot (what, schemaFormats) {
   const sites = stackSites()
   if (sites.length < 3) {
     // hmm, maybe there is test (like we are inside Cypress)
@@ -162,8 +162,8 @@ function snapshot (what, update) {
 
     const value = strip(any)
     const expected = findStoredValue({file, specName, index})
-    if (update || expected === undefined) {
-      const schema = train(value)
+    if (expected === undefined) {
+      const schema = train(value, schemaFormats)
       storeValue({file, specName, index, value: schema})
     } else {
       debug('found schema snapshot for "%s", value', specName, expected)

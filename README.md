@@ -77,6 +77,33 @@ Error: schema difference
 [validate-by-example]: https://github.com/bahmutov/validate-by-example
 [snapshot testing]: https://glebbahmutov.com/blog/snapshot-testing/
 
+## Inferred property formats
+
+A more specific property formats are inferred, see
+[validate-by-example#inferring-formats][inferring] and can be
+[overridden][overridden].
+
+```js
+const person = {
+  name: 'Joe Smith',
+  email: 'joe@foo.com'
+}
+// let it infer that person.email has "email" format
+schemaShot(person)
+// or we can set it ourselves
+schemaShot(person, {email: 'email'})
+/*
+  schema properties
+  {
+    name: {type: 'string', required: true},
+    email: {type: 'string', required: true, format: 'email'}
+  }
+*/
+```
+
+[inferring]: https://github.com/bahmutov/validate-by-example#inferring-formats
+[overridden]: https://github.com/bahmutov/validate-by-example#overriding-formats
+
 ## Difference with snapshot testing
 
 The schema shots do not store the direct information. A good example is

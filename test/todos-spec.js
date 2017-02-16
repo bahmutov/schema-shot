@@ -26,3 +26,17 @@ describe('fake-todos', () => {
     schemaShot(todos[0])
   })
 })
+
+describe('faker', () => {
+  const faker = require('faker')
+  const generate = () => ({
+    name: faker.name.findName(),
+    email: faker.internet.email(),
+    avatar: faker.image.imageUrl()
+  })
+
+  it('validates generated profile', () => {
+    const example = generate()
+    schemaShot(example)
+  })
+})

@@ -22,3 +22,25 @@ exports['returns a todo 1'] = {
   "additionalProperties": false
 }
 
+exports['validates generated profile 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "format": "email"
+    },
+    "avatar": {
+      "type": "string",
+      "required": true,
+      "format": "uri"
+    }
+  },
+  "additionalProperties": false
+}
+
