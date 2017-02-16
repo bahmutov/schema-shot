@@ -1,7 +1,7 @@
 {
   "name": "schema-shot",
   "description": "Framework-agnostic snapshot testing using 'schema by example' for highly dynamic data",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bugs": "https://github.com/bahmutov/schema-shot/issues",
   "config": {
@@ -58,7 +58,8 @@
     "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
-    "unit": "mocha src/*-spec.js test/*-spec.js"
+    "unit": "mocha src/*-spec.js test/*-spec.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
     "callsites": "2.0.0",
@@ -84,6 +85,7 @@
     "mocha": "3.2.0",
     "nsp": "2.6.2",
     "pre-git": "3.13.0",
-    "standard": "8.6.0"
+    "standard": "8.6.0",
+    "semantic-release": "^6.3.2"
   }
 }
