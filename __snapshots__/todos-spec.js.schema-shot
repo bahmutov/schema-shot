@@ -1,0 +1,24 @@
+exports['returns a todo 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "what": {
+      "type": "string",
+      "required": true
+    },
+    "due": {
+      "type": "string",
+      "required": true
+    },
+    "done": {
+      "type": "boolean",
+      "required": true
+    },
+    "id": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "additionalProperties": false
+}
+

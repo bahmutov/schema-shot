@@ -73,10 +73,46 @@ Error: schema difference
   data.id: is required
 ```
 
-[snap-shot]: https://github.com/bahmutov/snap-shot
 [json-schema]: http://json-schema.org/
 [validate-by-example]: https://github.com/bahmutov/validate-by-example
 [snapshot testing]: https://glebbahmutov.com/blog/snapshot-testing/
+
+## Difference with snapshot testing
+
+The schema shots do not store the direct information. A good example is
+a test using [snap-shot][snap-shot] and [fake-todos][fake-todos] in
+[test/todos-spec.js](test/todos-spec.js). The snapshot test always fails
+on the second run, because a returned todo is *different*. The JSON
+schema on the other hand stays consistent, as long as *fake-todos*
+returns objects with same shape.
+
+```js
+const snapshot = require('snap-shot')
+const schemaShot = require('schema-shot')
+const generate = require('fake-todos')
+describe('fake-todos', () => {
+  it.skip('returns a different todo', () => {
+    const todos = generate(1)
+    snapshot(todos[0])
+    /*
+      Fails of course, because every todo is different
+        1) fake-todos returns a different todo:
+           Error: snapshot difference
+      {
+        id: "4e040570-..." => "129a55b4-..."
+        what: "do adults" => "skip chess"
+      }
+    */
+  })
+  it('returns a todo', () => {
+    const todos = generate(1)
+    schemaShot(todos[0])
+  })
+})
+```
+
+[snap-shot]: https://github.com/bahmutov/snap-shot
+[fake-todos]: https://github.com/bahmutov/fake-todos
 
 ### Small print
 
