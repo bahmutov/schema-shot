@@ -73,6 +73,10 @@ function saveSnapshots (specFile, snapshots) {
 
 // expected = schema we expect value to adhere to
 function raiseIfDifferent ({value, expected, specName}) {
+  la(value, 'missing value to compare', value)
+  la(expected, 'missing expected valu', expected)
+  la(is.unemptyString(specName), 'missing spec name', specName)
+
   const result = validate(expected, value)
   if (!result.valid) {
     la(is.array(result.errors), 'invalid errors', result)

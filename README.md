@@ -77,6 +77,33 @@ Error: schema difference
 [validate-by-example]: https://github.com/bahmutov/validate-by-example
 [snapshot testing]: https://glebbahmutov.com/blog/snapshot-testing/
 
+## Returned value is schema object
+
+You can inspect or even [snap-shot][snap-shot] the schema object.
+
+```js
+const snapshot = require('snap-shot')
+const schemaShot = require('schema-shot')
+it('returns schema object', () => {
+  const o = {name: 'my name'}
+  const schema = schemaShot(o)
+  snapshot(schema)
+})
+```
+
+Both objects in this case will be
+
+```js
+{
+  '$schema': 'http://json-schema.org/draft-04/schema#',
+  type: 'object',
+  properties: {
+    name: { type: 'string', required: true }
+  },
+  additionalProperties: false
+}
+```
+
 ## Inferred property formats
 
 A more specific property formats are inferred, see

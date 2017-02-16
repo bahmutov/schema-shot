@@ -162,11 +162,13 @@ function snapshot (what, schemaFormats) {
 
     const value = strip(any)
     const expected = findStoredValue({file, specName, index})
+    let schema
     if (expected === undefined) {
-      const schema = train(value, schemaFormats)
+      schema = train(value, schemaFormats)
       storeValue({file, specName, index, value: schema})
     } else {
       debug('found schema snapshot for "%s", value', specName, expected)
+      schema = expected
       fs.raiseIfDifferent({
         value,
         expected,
@@ -174,7 +176,7 @@ function snapshot (what, schemaFormats) {
       })
     }
 
-    return value
+    return schema
   }
 
   if (isPromise(what)) {
