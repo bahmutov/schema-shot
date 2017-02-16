@@ -1,6 +1,6 @@
 # schema-shot
 
-> Framework-agnostic snapshot testing using &#39;schema by example&#39; for highly dynamic data
+> Framework-agnostic snapshot testing using "schema by example" for highly dynamic data
 
 [![NPM][npm-icon] ][npm-url]
 
@@ -8,15 +8,83 @@
 [![semantic-release][semantic-image] ][semantic-url]
 [![js-standard-style][standard-image]][standard-url]
 
+If you like [snap-shot][snap-shot] (snapshot testing for any JS framework),
+but have data that is hard to pin down, maybe this package will be useful.
+Instead of storing *literal* data snapshot, it stores [json-schema][json-schema]
+derived from a the snapshot object seen **first time** (using
+[validate-by-example][validate-by-example] to derive it). Next time an object
+arrives, it will be validated against the *schema*. Any missing property,
+or new one will trigger an exception.
+
+## Example
+
+Imagine we are fetching most popular item from an API service. Obviously
+it changes often, so we cannot just store it as a snapshot for direct
+comparison. We could massage the data and derive
+[invariant snapshots][snapshot testing], but that is boilerplate code!
+
+Instead, use `schema-shot`!
+
+```sh
+npm install --save-dev schema-shot
+```
+
+In your test
+
+```js
+// spec.js
+const schemaShot = require('schema-shot')
+it('returns most popular item', () => {
+  const top = api.getMostPopularItem()
+  schemaShot(top)
+})
+```
+
+Suppose first time it runs, the API returns `top = {id: '45a12e'}` - an object
+with just its `id` property. The `__snapshots__/spec.js.schema-shot` file
+will be saved with
+
+```js
+exports['returns most popular item 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "additionalProperties": false
+}
+```
+
+Now imagine the same day later running again. The API returns something else,
+but the object still has same *shape*, just a different id `{id: 8812f0}`.
+This object passes the schema validation step.
+
+A week later, the new API version gets deployed. Now it returns the top
+item, but instead of `id` property, it returns `uuid` property. The test
+will fail!
+
+```sh
+$ npm test
+Error: schema difference
+  data has additional properties
+  data.id: is required
+```
+
+[snap-shot]: https://github.com/bahmutov/snap-shot
+[json-schema]: http://json-schema.org/
+[validate-by-example]: https://github.com/bahmutov/validate-by-example
+[snapshot testing]: https://glebbahmutov.com/blog/snapshot-testing/
+
 ### Small print
 
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2017
 
-
 * [@bahmutov](https://twitter.com/bahmutov)
 * [glebbahmutov.com](http://glebbahmutov.com)
 * [blog](http://glebbahmutov.com/blog)
-
 
 License: MIT - do anything with the code, but don't blame me if it does not work.
 

@@ -8,6 +8,7 @@ const la = require('lazy-ass')
 const is = require('check-more-types')
 const utils = require('./utils')
 const {snapshotIndex, strip} = utils
+const {train} = require('validate-by-example')
 
 const isNode = Boolean(require('fs').existsSync)
 const isBrowser = !isNode
@@ -162,9 +163,10 @@ function snapshot (what, update) {
     const value = strip(any)
     const expected = findStoredValue({file, specName, index})
     if (update || expected === undefined) {
-      storeValue({file, specName, index, value})
+      const schema = train(value)
+      storeValue({file, specName, index, value: schema})
     } else {
-      debug('found snapshot for "%s", value', specName, expected)
+      debug('found schema snapshot for "%s", value', specName, expected)
       fs.raiseIfDifferent({
         value,
         expected,

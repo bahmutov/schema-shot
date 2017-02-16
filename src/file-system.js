@@ -2,13 +2,14 @@
 
 const fs = require('fs')
 const path = require('path')
-const diff = require('variable-diff')
-const disparity = require('disparity')
+// const diff = require('variable-diff')
+// const disparity = require('disparity')
 const debug = require('debug')('snap-shot')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const mkdirp = require('mkdirp')
 const vm = require('vm')
+const {validate} = require('validate-by-example')
 
 const cwd = process.cwd()
 const fromCurrentFolder = path.relative.bind(null, cwd)
@@ -37,7 +38,7 @@ function loadSnaps (snapshotPath) {
 
 function fileForSpec (specFile) {
   const specName = path.basename(specFile)
-  const filename = path.join(snapshotsFolder, specName + '.snap-shot')
+  const filename = path.join(snapshotsFolder, specName + '.schema-shot')
   return path.resolve(filename)
 }
 
@@ -70,32 +71,15 @@ function saveSnapshots (specFile, snapshots) {
   return snapshots
 }
 
-const isMultiLineText = s => is.string(s) && s.includes('\n')
-const areStrings = (s, t) => is.string(s) && is.string(t)
-const compareAsStrings = (s, t) => areStrings(s, t) &&
-  (isMultiLineText(s) || isMultiLineText(t))
-
-function compareText (expected, value) {
-  const textDiff = disparity.unified(expected, value)
-  if (!textDiff) {
-    return {changed: false}
-  }
-  return {
-    changed: true,
-    text: textDiff
-  }
-}
-
-const compareObjects = diff
-
+// expected = schema we expect value to adhere to
 function raiseIfDifferent ({value, expected, specName}) {
-  const diffed = compareAsStrings(value, expected)
-    ? compareText(expected + '\n', value + '\n')
-    : compareObjects(expected, value)
-  if (diffed.changed) {
-    const text = diffed.text
+  const result = validate(expected, value)
+  if (!result.valid) {
+    la(is.array(result.errors), 'invalid errors', result)
+
+    const text = result.errors.map(o => `${o.field}: ${o.message}`).join('\n')
     debug('Test "%s" snapshot difference', specName)
-    const msg = `snapshot difference\n${text}`
+    const msg = `schema difference\n${text}`
     console.log(msg)
     throw new Error(msg)
   }

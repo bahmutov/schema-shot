@@ -1,9 +1,12 @@
 'use strict'
 
+const is = require('check-more-types')
+const la = require('lazy-ass')
+
 /* global describe, it */
 describe('schema-shot', () => {
   const schemaShot = require('.')
-  it('write this test', () => {
-    console.assert(schemaShot, 'should export something')
+  it('is a function', () => {
+    la(is.fn(schemaShot))
   })
 })
