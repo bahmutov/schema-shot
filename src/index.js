@@ -1,14 +1,15 @@
 'use strict'
 
 const debug = require('debug')('snap-shot')
-const debugSave = require('debug')('save')
 const stackSites = require('stack-sites')
 const callsites = require('callsites')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const utils = require('./utils')
-const {snapshotIndex, strip} = utils
+const {strip} = utils
 const {train} = require('validate-by-example')
+const snapShotCore = require('snap-shot-core')
+const compare = require('./compare')
 
 const isNode = Boolean(require('fs').existsSync)
 const isBrowser = !isNode
@@ -23,67 +24,17 @@ if (isNode) {
   fs = require('./browser-system')
 }
 
-// keeps track how many "snapshot" calls were there per test
-const snapshotsPerTest = {}
+const opts = {
+  show: Boolean(process.env.SHOW),
+  dryRun: Boolean(process.env.DRY),
+  update: Boolean(process.env.UPDATE)
+}
 
-const shouldUpdate = Boolean(process.env.UPDATE)
-const shouldShow = Boolean(process.env.SHOW)
-const shouldDryRun = Boolean(process.env.DRY)
+const SNAP_SHOT_EXTENSION = '.schema-shot'
 
 function getSpecFunction ({file, line}) {
   return utils.getSpecFunction({file, line, fs})
 }
-
-const formKey = (specName, oneIndex) =>
-  `${specName} ${oneIndex}`
-
-function findStoredValue ({file, specName, index = 1}) {
-  const relativePath = fs.fromCurrentFolder(file)
-  if (shouldUpdate) {
-    // let the new value replace the current value
-    return
-  }
-
-  debug('loading snapshots from %s for spec %s', file, relativePath)
-  const snapshots = fs.loadSnapshots(file)
-  if (!snapshots) {
-    return
-  }
-
-  const key = formKey(specName, index)
-  if (!(key in snapshots)) {
-    return
-  }
-
-  return snapshots[key]
-}
-
-function storeValue ({file, specName, index, value}) {
-  la(value !== undefined, 'cannot store undefined value')
-  la(is.unemptyString(file), 'missing filename', file)
-  la(is.unemptyString(specName), 'missing spec name', specName)
-  la(is.positive(index), 'missing snapshot index', file, specName, index)
-
-  const snapshots = fs.loadSnapshots(file)
-  const key = formKey(specName, index)
-  snapshots[key] = value
-
-  if (shouldShow || shouldDryRun) {
-    const relativeName = fs.fromCurrentFolder(file)
-    console.log('saving snapshot "%s" for file %s', key, relativeName)
-    console.log(value)
-  }
-
-  if (!shouldDryRun) {
-    fs.saveSnapshots(file, snapshots)
-    debug('saved updated snapshot %d for spec %s', index, specName)
-
-    debugSave('Saved for "%s %d" snapshot\n%s',
-      specName, index, JSON.stringify(value, null, 2))
-  }
-}
-
-const isPromise = x => is.object(x) && is.fn(x.then)
 
 function snapshot (what, schemaFormats) {
   const sites = stackSites()
@@ -156,33 +107,24 @@ function snapshot (what, schemaFormats) {
   la(is.number(startLine), 'could not determine spec function start line',
     file, 'line', line, 'column', column, 'named', specName)
 
+  const store = value => train(value, schemaFormats)
+
   const setOrCheckValue = any => {
-    const index = snapshotIndex({specName, counters: snapshotsPerTest})
-    la(is.positive(index), 'invalid snapshot index', index,
-      'for\n', specName, '\ncounters', snapshotsPerTest)
-    debug('spec "%s" snapshot is #%d',
-      specName, index)
-
     const value = strip(any)
-    const expected = findStoredValue({file, specName, index})
-    let schema
-    if (expected === undefined) {
-      schema = train(value, schemaFormats)
-      storeValue({file, specName, index, value: schema})
-    } else {
-      debug('found schema snapshot for "%s", value', specName, expected)
-      schema = expected
-      fs.raiseIfDifferent({
-        value,
-        expected,
-        specName
-      })
-    }
+    const returnedValue = snapShotCore({
+      what: value,
+      file,
+      specName,
+      compare,
+      store,
+      ext: SNAP_SHOT_EXTENSION,
+      opts
+    })
 
-    return schema
+    return returnedValue
   }
 
-  if (isPromise(what)) {
+  if (is.promise(what)) {
     return what.then(setOrCheckValue)
   } else {
     return setOrCheckValue(what)
