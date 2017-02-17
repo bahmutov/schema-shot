@@ -16,6 +16,8 @@ derived from a the snapshot object seen **first time** (using
 arrives, it will be validated against the *schema*. Any missing property,
 or new one will trigger an exception.
 
+Read [the blog post](https://glebbahmutov.com/blog/schema-shot/)
+
 ## Example
 
 Imagine we are fetching most popular item from an API service. Obviously
