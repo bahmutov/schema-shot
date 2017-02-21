@@ -59,6 +59,7 @@
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
     "unit": "mocha src/*-spec.js test/*-spec.js",
+    "ava": "ava --verbose test/*.test.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
@@ -78,6 +79,7 @@
     "babel-core": "^6.0.0"
   },
   "devDependencies": {
+    "ava": "0.18.1",
     "ban-sensitive-files": "1.9.0",
     "dependency-check": "2.8.0",
     "deps-ok": "1.2.0",
@@ -89,7 +91,7 @@
     "nsp": "2.6.2",
     "pre-git": "3.13.0",
     "semantic-release": "6.3.6",
-    "snap-shot": "2.10.2",
+    "snap-shot": "2.13.0",
     "standard": "9.0.0-beta.0"
   }
 }
