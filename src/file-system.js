@@ -2,8 +2,6 @@
 
 const fs = require('fs')
 const path = require('path')
-// const diff = require('variable-diff')
-// const disparity = require('disparity')
 const debug = require('debug')('snap-shot')
 const la = require('lazy-ass')
 const is = require('check-more-types')

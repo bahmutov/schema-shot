@@ -10,6 +10,7 @@ const {strip} = utils
 const {train} = require('validate-by-example')
 const snapShotCore = require('snap-shot-core')
 const compare = require('./compare')
+const findTestCaller = require('find-test-caller')
 
 const isNode = Boolean(require('fs').existsSync)
 const isBrowser = !isNode
@@ -33,7 +34,7 @@ const opts = {
 const SNAP_SHOT_EXTENSION = '.schema-shot'
 
 function getSpecFunction ({file, line}) {
-  return utils.getSpecFunction({file, line, fs})
+  return findTestCaller({file, line, fs})
 }
 
 function snapshot (what, schemaFormats) {
