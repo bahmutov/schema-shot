@@ -1,5 +1,7 @@
 # schema-shot
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bahmutov/schema-shot.svg)](https://greenkeeper.io/)
+
 > Framework-agnostic snapshot testing using "schema by example" for highly dynamic data
 
 [![NPM][npm-icon] ][npm-url]
