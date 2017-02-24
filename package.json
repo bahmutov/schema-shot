@@ -11,6 +11,7 @@
         "npm prune",
         "npm run deps",
         "npm test",
+        "npm run ava",
         "npm run ban"
       ],
       "pre-push": [
@@ -71,7 +72,7 @@
     "mkdirp": "0.5.1",
     "snap-shot-core": "1.2.1",
     "stack-sites": "1.2.0",
-    "validate-by-example": "1.4.0"
+    "validate-by-example": "1.5.0"
   },
   "peerDependencies": {
     "babel-core": "^6.0.0"

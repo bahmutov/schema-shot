@@ -15,5 +15,15 @@ test('returns a todo', t => {
 
 test('todo promise', async t => {
   const todo = await generateP()
+  console.log('todo', todo)
   schemaShot(todo)
+})
+
+test('color vs text', t => {
+  const item = {
+    name: 'this is a name',
+    color: '#ff00ff'
+  }
+  console.log('item', item)
+  schemaShot(item)
 })

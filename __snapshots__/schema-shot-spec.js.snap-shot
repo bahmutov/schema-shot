@@ -10,3 +10,15 @@ exports['returns schema object 1'] = {
   "additionalProperties": false
 }
 
+exports['returns schema object 2'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "additionalProperties": false
+}
+
