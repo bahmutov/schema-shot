@@ -1,0 +1,39 @@
+exports['stores training example 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "age": {
+      "type": "number",
+      "required": true
+    },
+    "married": {
+      "type": "boolean",
+      "required": true
+    },
+    "lives": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "additionalProperties": false,
+      "required": true
+    }
+  },
+  "additionalProperties": false,
+  "example": {
+    "name": "gleb",
+    "age": 37,
+    "married": true,
+    "lives": {
+      "city": "Boston"
+    }
+  }
+}
+

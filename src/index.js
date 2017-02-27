@@ -108,7 +108,12 @@ function snapshot (what, schemaFormats) {
   la(is.number(startLine), 'could not determine spec function start line',
     file, 'line', line, 'column', column, 'named', specName)
 
-  const store = value => train(value, schemaFormats)
+  // TODO do not store value that is too large?
+  const store = value => {
+    const schema = train(value, schemaFormats)
+    schema.example = value
+    return schema
+  }
 
   const setOrCheckValue = any => {
     const value = strip(any)
