@@ -116,9 +116,9 @@ function snapshot (what, schemaFormats) {
   }
 
   const setOrCheckValue = any => {
-    const value = strip(any)
+    const what = strip(any)
     const returnedValue = snapShotCore({
-      what: value,
+      what,
       file,
       specName,
       compare,

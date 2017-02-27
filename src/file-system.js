@@ -7,7 +7,7 @@ const la = require('lazy-ass')
 const is = require('check-more-types')
 const mkdirp = require('mkdirp')
 const vm = require('vm')
-const {validate} = require('validate-by-example')
+const {stringify} = require('./utils')
 
 const cwd = process.cwd()
 const fromCurrentFolder = path.relative.bind(null, cwd)
@@ -62,35 +62,16 @@ function saveSnapshots (specFile, snapshots) {
   let s = ''
   Object.keys(snapshots).forEach(testName => {
     const value = snapshots[testName]
-    const serialized = JSON.stringify(value, null, 2)
+    const serialized = stringify(value)
     s += `exports['${testName}'] = ${serialized}\n\n`
   })
   fs.writeFileSync(filename, s, 'utf8')
   return snapshots
 }
 
-// expected = schema we expect value to adhere to
-function raiseIfDifferent ({value, expected, specName}) {
-  la(value, 'missing value to compare', value)
-  la(expected, 'missing expected valu', expected)
-  la(is.unemptyString(specName), 'missing spec name', specName)
-
-  const result = validate(expected, value)
-  if (!result.valid) {
-    la(is.array(result.errors), 'invalid errors', result)
-
-    const text = result.errors.map(o => `${o.field}: ${o.message}`).join('\n')
-    debug('Test "%s" snapshot difference', specName)
-    const msg = `schema difference\n${text}`
-    console.log(msg)
-    throw new Error(msg)
-  }
-}
-
 module.exports = {
   readFileSync: fs.readFileSync,
   fromCurrentFolder,
   loadSnapshots,
-  saveSnapshots,
-  raiseIfDifferent
+  saveSnapshots
 }

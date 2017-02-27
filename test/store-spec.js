@@ -3,7 +3,7 @@
 const schemaShot = require('..')
 
 /* global describe, it */
-describe.only('storing example object', () => {
+describe('storing example object', () => {
   const person = {
     name: 'gleb',
     age: 37,

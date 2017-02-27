@@ -20,7 +20,10 @@ function strip (o) {
   return JSON.parse(JSON.stringify(o))
 }
 
+const stringify = v => JSON.stringify(v, null, 2)
+
 module.exports = {
   snapshotIndex,
-  strip
+  strip,
+  stringify
 }
