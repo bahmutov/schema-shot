@@ -142,6 +142,12 @@ run the tests with `DRY=1 npm test` option.
 
 If you want to see the schema and save it, run the tests with `SHOW=1 npm test`
 
+## Arrays
+
+When training with arrays
+
+* All items in the array must pass the schema derived from the first object
+
 ## Difference with snapshot testing
 
 The schema shots do not store the direct information. A good example is

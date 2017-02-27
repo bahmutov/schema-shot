@@ -1,0 +1,47 @@
+exports['validates by object in the list 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "additionalProperties": false,
+  "list": true,
+  "example": {
+    "name": "joe"
+  }
+}
+
+exports['list with complex objects 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "age": {
+      "type": "number",
+      "required": true
+    },
+    "gender": {
+      "type": "string",
+      "required": true
+    },
+    "present": {
+      "type": "boolean",
+      "required": true
+    }
+  },
+  "additionalProperties": false,
+  "list": true,
+  "example": {
+    "name": "joe",
+    "age": 20,
+    "gender": "male",
+    "present": true
+  }
+}
+

@@ -6,7 +6,7 @@ const callsites = require('callsites')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const utils = require('./utils')
-const {strip} = utils
+const {strip, stringify} = utils
 const {train} = require('validate-by-example')
 const snapShotCore = require('snap-shot-core')
 const compare = require('./compare')
@@ -108,9 +108,35 @@ function snapshot (what, schemaFormats) {
   la(is.number(startLine), 'could not determine spec function start line',
     file, 'line', line, 'column', column, 'named', specName)
 
+  // for a list derives schema from first item
+  const storeList = values => {
+    la(is.not.empty(values), 'cannot train schema on an empty list')
+    const example = values[0]
+    const schema = train(example, schemaFormats)
+    schema.list = true
+    schema.example = example
+
+    values.forEach((value, k) => {
+      const result = compare({expected: schema, value: [value]})
+      if (!result.valid) {
+        const msg = 'Could not train schema using the first item\n' +
+          result.message + '\n' +
+          'schema:\n' + stringify(schema) + '\n' +
+          'first object:\n' + stringify(example) + '\n'
+        throw new Error(msg)
+      }
+    })
+
+    return schema
+  }
+
   // TODO do not store value that is too large?
   const store = value => {
+    if (is.array(value)) {
+      return storeList(value)
+    }
     const schema = train(value, schemaFormats)
+    schema.list = false
     schema.example = value
     return schema
   }
