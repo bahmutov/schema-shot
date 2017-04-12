@@ -91,3 +91,43 @@ exports['does care about missing age property 1'] = {
   "additionalProperties": false
 }
 
+exports['(usually skip) additional property 1'] = {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "age": {
+      "type": "number",
+      "required": true
+    },
+    "married": {
+      "type": "boolean",
+      "required": true
+    },
+    "lives": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "additionalProperties": false,
+      "required": true
+    }
+  },
+  "additionalProperties": false,
+  "list": false,
+  "example": {
+    "name": "gleb",
+    "age": 37,
+    "married": true,
+    "lives": {
+      "city": "Boston"
+    }
+  }
+}
+

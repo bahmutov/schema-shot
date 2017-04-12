@@ -35,6 +35,12 @@ describe('schema-shot example', () => {
     schemaShot(p)
   })
 
+  it.skip('(usually skip) additional property', () => {
+    const p = R.clone(person)
+    p.foo = 'foo'
+    schemaShot(p)
+  })
+
   it.skip('does care about missing age property', () => {
     const p = getAgedPerson()
     console.log(p)
