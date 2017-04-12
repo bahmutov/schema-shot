@@ -49,8 +49,10 @@ function compare ({expected, value}) {
   if (expected.example) {
     const example = expected.example
     msg += 'example used to derive JSON schema\n' + stringify(example) + '\n'
-    msg += 'object right now\n' + stringify(value) + '\n'
+  } else {
+    msg += 'example schema\n' + stringify(expected) + '\n'
   }
+  msg += 'object right now\n' + stringify(value) + '\n'
 
   return {
     valid: false,
