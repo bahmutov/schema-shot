@@ -1,7 +1,10 @@
 const la = require('lazy-ass')
 const is = require('check-more-types')
-const {validate} = require('validate-by-example')
+const diff = require('variable-diff')
+const R = require('ramda')
+const {validate, train} = require('validate-by-example')
 const {stringify} = require('./utils')
+const stripAnsi = require('strip-ansi')
 
 const formatErrors = errors => {
   const text = errors.map(o => `${o.field}: ${o.message}`).join('\n')
@@ -31,6 +34,24 @@ const validateList = (schema, values) => {
   }
 }
 
+function additionalErrorInfo (expected, value) {
+  let msg = ''
+  if (expected.example) {
+    msg += 'example used to derive JSON schema\n' + stringify(expected.example) + '\n'
+  } else {
+    msg += 'expected schema\n' + stringify(expected) + '\n'
+  }
+  msg += 'object right now\n' + stringify(value) + '\n'
+
+  const schema = train(value)
+  const difference = diff(R.omit(['example', 'list'])(expected), schema)
+  msg += '*** schema difference ***\n' +
+    stripAnsi(difference.text) +
+    '*** end schema difference ***\n'
+
+  return msg
+}
+
 function compare ({expected, value}) {
   const schema = expected
   if (schema.list) {
@@ -44,19 +65,10 @@ function compare ({expected, value}) {
 
   la(is.array(result.errors), 'invalid errors', result)
 
-  let msg = formatErrors(result.errors)
-
-  if (expected.example) {
-    const example = expected.example
-    msg += 'example used to derive JSON schema\n' + stringify(example) + '\n'
-  } else {
-    msg += 'example schema\n' + stringify(expected) + '\n'
-  }
-  msg += 'object right now\n' + stringify(value) + '\n'
-
+  const message = formatErrors(result.errors) + additionalErrorInfo(expected, value)
   return {
     valid: false,
-    message: msg
+    message
   }
 }
 
