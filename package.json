@@ -91,7 +91,7 @@
     "license-checker": "9.0.3",
     "mocha": "3.2.0",
     "nsp": "2.6.3",
-    "pre-git": "3.14.0",
+    "pre-git": "3.15.0",
     "semantic-release": "6.3.6",
     "snap-shot": "2.16.4",
     "standard": "10.0.1"
