@@ -83,7 +83,7 @@
   "devDependencies": {
     "ava": "0.19.1",
     "ban-sensitive-files": "1.9.0",
-    "dependency-check": "2.8.0",
+    "dependency-check": "2.9.0",
     "deps-ok": "1.2.0",
     "fake-todos": "1.8.0",
     "faker": "4.1.0",
